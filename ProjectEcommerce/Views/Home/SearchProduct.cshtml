@@ -1,0 +1,49 @@
+﻿ 
+@{
+    ViewBag.Title = "ViewSearch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var viewSearch = (List<ProjectEcommerce.Models.EF.Product>)ViewBag.listSearch;
+    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+
+}
+ 
+<div>
+    <h2 style="color:red">Kết quả tìm kiếm:  </h2>
+    s
+    @if (viewSearch.Count < 1)
+    {
+        <div style="height:260px">
+            
+            <h3 style="text-align:center">Không có sản phẩm nào</h3> 
+            <center><img style="width:200px; height:200px" src="~/images/pngtree-furniture-logo-design-symbol-and-icon-of-chairs-sofas-tables-and-image_304232.jpg" /></center> 
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var a in viewSearch)
+            {
+                 
+
+                <div class="col-md-3">
+
+                    
+
+                        <img src="@a.Image" width="250px" height="200px" />
+                        <div><h4 style="text-align:center">@a.NamePro</h4></div>
+
+                         
+                        <h3 style="color:red; font-size:22px; text-align:center">@a.Price.ToString("#,###", info) VNĐ </h3>
+
+                     
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
+
+
+
+

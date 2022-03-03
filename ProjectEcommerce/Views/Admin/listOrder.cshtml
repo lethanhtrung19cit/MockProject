@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "Danh sách hàng chờ";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var listOrder = (List<ProjectEcommerce.Models.EF.Order>)ViewBag.listOrder;
+}
+@*<input style="padding:5px" id="search" type="text" placeholder="Tìm kiếm hàng"/>
+<button class="btn btn-primary"><i class="fa fa-search"></i>Tìm kiếm</button>*@
+<h2>Danh sách hàng chờ</h2>
+@if (listOrder.Count<1)
+{ 
+<div style="height:260px">
+
+    <h3 style="text-align:center">Không có đơn hàng nào</h3>
+    <center><img style="width:200px; height:200px" src="~/images/order.jpg" /></center>
+</div>
+}
+else
+{ 
+<table class="table">
+    <tr class="headerrow">
+        <th>Tên khách hàng</th>
+        <th>Mã hàng</th>
+        <th>Tên hàng</th>
+        <th>Đơn giá</th>
+        <th>Số lượng</th>
+        <th>Tổng tiền</th>
+        <th>Địa chỉ nhận hàng</th>
+        <th></th>
+    </tr>
+    @foreach (var item in listOrder)
+    {
+         
+        <tr id="@item.IdOrder">
+            <td>@item.NameCus</td>
+            <td>@item.CodePro</td>
+            <td>@item.NamePro</td>
+            <td>@item.Price</td>
+            <td>@item.Number</td>
+            <td>@item.SumPrice</td>
+            <td>@item.Address</td>
+            <td><button class="btn btn-group" onclick="approval(@item.IdOrder, '@item.CodePro', @item.Number)"><i class="fa fa-check"></i> Duyệt</button></td>
+        </tr>
+    }
+
+</table>
+}
+
+<script>
+    function approval(IdOrder, CodePro, Number) {
+        $('#' + IdOrder).remove();
+        
+        $.ajax(
+            {
+                type: "POST",
+                url: "/Admin/Approval/",
+                data: { IdOrder: IdOrder, CodePro: CodePro, Number:Number},
+
+                dataType: "json"
+                 
+            })
+    }
+</script>

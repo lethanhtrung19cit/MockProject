@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <style>
+        .header {
+            margin-left: -30px;
+        }
+        .header li a {
+            font-size: 17px;
+            color: white;
+        }
+
+        a:link, a:visited {
+            text-decoration: none;
+        }
+
+        li {
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .headerrow {
+            background: #999;
+            color: white;
+        }
+
+        tr td {
+            border: 1px solid #999;
+        }
+
+        tr th {
+            border: 1px solid #857f7f;
+        }
+
+        tr th {
+            text-align: center;
+        }
+
+        table {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row" style="margin-top:-50px">
+        <div class="col-md-3" style="background: #144772; height:650px; position:fixed; width:270px; overflow:auto">
+            <ul class="header">
+                <li><a href="@Url.Action("listOrder", "Admin")"><img src="~/images/Admin/order-online-icon-16.png" style="width:35px; height:35px" /> Danh sách đặt hàng</a></li>
+                <li><a href="@Url.Action("listOrdering", "Admin")"><img src="~/images/Admin/transpoting.png" style="width:35px; height:35px" />  Danh sách hàng đang vận chuyển</a></li>
+                <li><a href="@Url.Action("listOrdered", "Admin")"><img src="~/images/complete-check-hi.png" style="width:35px; height:35px" />  Danh sách hàng đã giao</a></li>
+                <li><a href="@Url.Action("listProduct", "Admin")"><img src="~/images/Admin/stuck.png" style="width:35px; height:35px" /> Kho hàng hóa</a></li>
+
+            </ul>
+        </div>
+        <div class="col-md-9" style="margin-left:280px; width:1080px; background:white">
+            @RenderBody()
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

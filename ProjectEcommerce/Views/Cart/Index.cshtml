@@ -1,0 +1,244 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var listCarts = (List<ProjectEcommerce.Models.EF.DetailCart>)ViewBag.listCarts;
+    float sumPrice1 = 0;
+    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+    int count = 0;
+}
+ 
+<div style="min-height:400px">
+    <div id="sumMoney" style="font-size: 18px; z-index: 2; background: #8d8d8d; padding: 20px 0 5px 0; width:1186px">
+        <div class="row">
+             
+            <div class="col-md-5" style="width:650px">
+
+                Tổng thanh toán:(<label id="amount" style="margin-right:10px"> 0 </label>Sản phẩm)
+                <label style="color: #851c1c" id="sumprice">0</label>VNĐ
+                <button onclick="buyProduct()" class="btn btn-block" style="color:white; width:100px; font-weight:bold; display:inline-block; background:red" @*data-toggle="modal" data-target="#addGoods"*@><i class="fa fa-usd"></i> Mua hàng </button>
+                <div id="addGoods" class="modal fade" @*tabindex="-1"*@ role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            @using (Html.BeginForm("buyProduct", "Cart", FormMethod.Post))
+                            {
+                                <div id="myModal">
+                                    <div class="modal-header" style="height: 70px; background: #337ab7; color: white; font-weight: bold; font-size: 30px; padding: 0;">
+
+                                        <h4 style=" font-size: 25px; margin: 15px 0 0 10px;" class="modal-title">Xác nhận mua hàng</h4>
+                                        <button style=" margin: -35px 10px 0 0;" type="button" class="close" data-dismiss="modal" aria-label="Close"><span style="font-size:25px" aria-hidden="true">&times;</span></button>
+                                    </div>
+
+
+                                    <div class="modal-body">
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                Thêm địa chỉ nhận hàng
+                                            </div>
+                                            <div class="col-md-6">
+                                                 
+                                                <textarea required="required" name="Address" style="border-radius: 5px; max-width: 500px; width: 320px; height: 100px;"></textarea>
+                                            </div>
+                                        </div>
+                                         
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-primary" value="Xác nhận" />.
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Hủy</button>
+                                </div>
+                            }
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div>
+                 
+
+             </div>
+        </div>
+    </div>
+    <table style="width:1185px">
+         
+        <tr style="font-size:20px">
+            <th></th>
+            <th>Tên hàng</th>
+            <th></th>
+            <th>Đơn giá</th>
+            <th>Số lượng</th>
+            <th>Số tiền</th>
+            <th>Thao tác</th>
+        </tr>
+        
+        @foreach (var a in listCarts)
+        {
+
+            string a2 = "sumP" + a.IdCart;
+            string row = "row" + a.IdCart;
+            float sumPrice = a.Price * a.Number;
+            string checkBox1 = "stt" + a.IdCart;
+
+
+            <tr id="@row">
+                <td><input style="height:30px; width: 30px" id="@checkBox1" onclick="sumMoney(@a.IdCart, @sumPrice, @a.IdPro, '@Session["IdCus"].ToString()')" type="checkbox"/></td>
+                <td style="font-size:17px"><img src="@a.Image" style="width: 200px; height: 150px; border: solid 2px #996565;"/> </td>
+                <td><label> @a.NamePro</label></td>
+                <td>@a.Price.ToString("#,###", info) VND</td>
+                <td>
+                    <input style="padding: 6px 15px;" onclick="decrease(@a.IdCart, '@a2', @a.Price)" type="button" value="-" />
+                    <input style="width:50px; padding:7px" id="@a.IdCart" type="text" value="@a.Number" />
+                    <input style="padding: 6px 15px;" onclick="increase(@a.IdCart, '@a2', @a.Price)" type="button" value="+" /> 
+                </td>
+                <td data-id="@sumPrice.ToString("0")" style="color: #fb471e; font-weight:bold" id="@a2">@sumPrice.ToString("0") VND</td>
+                <td>
+                    <button class="btn btn-primary" onclick="deleteCart('@a.IdCart')"> <i class="fa fa-trash"></i> Xóa</button>
+                </td>
+            </tr>
+
+                sumPrice1 += sumPrice;
+
+
+            }
+         
+        </table>
+
+        </div>
+<input id="sum" type="hidden" value="@sumPrice1.ToString("0")"/>
+<input id="count" type="hidden" value="@count"/>
+<script>
+    
+    window.onscroll = function () { myFunction() };
+    var navbar = document.getElementById("sumMoney");
+    var sticky = navbar.offsetTop;
+
+    function addSess() {
+        $.ajax({
+                type: "POST",
+                url: "/Cart/addSession/",
+                data: { value: 1 },
+                dataType: "json",
+                success: function () {
+
+                }
+
+            });
+    }
+    function myFunction() {
+        if (window.pageYOffset >= sticky) {
+            navbar.classList.add("sticky")
+        } else {
+            navbar.classList.remove("sticky");
+        }
+    }
+
+     
+    function sumMoney(IdCart, Price) {
+        var count = $('#count').val();
+        
+        if ($('#stt' + IdCart).is(':checked') == true) {
+            count++;
+            
+            var sum = $('#sumprice').text();
+            sum =parseInt(sum)+ parseFloat(Price);
+            $('#sumprice').text(sum);
+            var amount = $('#amount').text();
+            amount++;
+            $('#amount').text(amount);
+            $.ajax({
+                type: "POST",
+                url: "/Cart/addSession/",
+                data: { IdCart: IdCart },
+                dataType: "json",
+                success: function () {
+
+                }
+
+            });
+        }
+        else {
+            count--;
+            var amount = $('#amount').text();
+            amount--;
+            $('#amount').text(amount);
+            var sum = $('#sumprice').text();
+            sum =sum - Price;
+            $('#sumprice').text(sum);
+             
+        }
+        $('#count').val(count);
+    }
+   
+    function deleteCart(sttRow) {
+        let txt = "Xác nhận xóa giỏ hàng ?";
+        if (confirm(txt) == true) {
+            var row = $('#row' + sttRow);
+            row.remove();
+            $.ajax({
+                type: "POST",
+                url: "/Cart/deleteCart/",
+                data: { IdCart: sttRow },
+                dataType: "json",
+                success: function () {
+
+                }
+
+            });
+             
+        }
+        
+    }
+    function increase(IdCart, sumPrice, price) {
+        var number = $('#' + IdCart).val();
+          
+        var number1 = Number(number) + 1;
+
+        $('#' + IdCart).val(number1);
+        var sumPrice1 = number1 * price;
+        $('#' + sumPrice).html(sumPrice1 + ' VND');
+        $.ajax({
+            type: "POST",
+            url: "/Cart/updateNumber/",
+            data: { IdCart: IdCart, Number: number1 },
+
+            dataType: "json",
+            success: function () {
+
+            }
+
+        });
+    }
+    function decrease(IdCart, sumPrice, price) {
+        var number = $('#' + IdCart).val();
+ 
+        var number1 = Number(number) - 1;
+        if (number1 >0) {
+             
+             
+            $('#' + IdCart).val(number1);
+            var sumPrice1 = number1 * price;
+            $('#' + sumPrice).html(sumPrice1 + ' VND');
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Cart/updateNumber/",
+            data: { IdCart: IdCart, Number: number1 },
+
+            dataType: "json",
+            success: function () {
+
+            }
+
+        });
+    }
+    function buyProduct() {
+        
+        var count = $('#count').val();
+        if (count == 0) {
+            alert("vui lòng chọn sản phẩm cần mua");
+        }
+        else {
+            $('#addGoods').modal();
+        }
+    }
+</script>
+

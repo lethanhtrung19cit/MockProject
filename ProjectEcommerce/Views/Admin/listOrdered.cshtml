@@ -1,0 +1,50 @@
+﻿
+
+@{
+    ViewBag.Title = "Danh sách hàng đã giao";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var listOrder = (List<ProjectEcommerce.Models.EF.Order>)ViewBag.listOrder;
+}
+@*<input style="padding:5px" id="search" type="text" placeholder="Tìm kiếm hàng"/>
+    <button class="btn btn-primary"><i class="fa fa-search"></i>Tìm kiếm</button>*@
+<h2>Danh sách hàng đã giao</h2>
+@if (listOrder.Count < 1)
+{
+    <div style="height:260px">
+
+        <h3 style="text-align:center">Không có đơn hàng nào</h3>
+        <center><img style="width:200px; height:200px" src="~/images/order.jpg" /></center>
+    </div>
+}
+else
+{
+<table class="table">
+    <tr class="headerrow">
+        <th>Tên khách hàng</th>
+        <th>Mã hàng</th>
+        <th>Tên hàng</th>
+        <th>Đơn giá</th>
+        <th>Số lượng</th>
+        <th>Tổng tiền</th>
+        <th>Địa chỉ nhận hàng</th>
+         
+    </tr>
+    @foreach (var item in listOrder)
+    {
+        <tr>
+            <td>@item.NameCus</td>
+            <td>@item.CodePro</td>
+            <td>@item.NamePro</td>
+            <td>@item.Price</td>
+            <td>@item.Number</td>
+            <td>@item.SumPrice</td>
+            <td>@item.Address</td>
+             
+        </tr>
+    }
+
+</table>
+}
+
+
+

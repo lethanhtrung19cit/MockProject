@@ -1,0 +1,272 @@
+﻿@model ProjectEcommerce.Models.EF.Product
+
+@{
+    ViewBag.Title = "listProduct";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var listProduct = (List<ProjectEcommerce.Models.EF.Product>)ViewBag.listProduct;
+}
+<style>
+    input {
+        padding: 8px;
+    }
+
+    .col-md-10 {
+        border-radius: 8px;
+        margin-left: -100px;
+    }
+
+    .modal-body .row {
+        margin-top: 10px;
+    }
+</style>
+<h2>Danh sách hàng nội thất</h2>
+<input style="width:900px; padding-left:10px; max-width:900px" id="Search" type="text" placeholder="Tìm kiếm tên hàng"/>
+<br />
+<button data-toggle="modal" data-target="#addProduct" class="btn btn-primary"><i class="fa fa-plus"></i>Thêm mới</button>
+<div id="addProduct" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("addProduct", "Admin", FormMethod.Post, new { @id = "addForm", @enctype = "multipart/form-data" }))
+            {
+                <div id="myModal">
+                    <div class="modal-header" style="height: 70px; background: #337ab7; color: white; font-weight: bold; font-size: 30px; padding: 0;">
+
+                        <h4 style=" font-size: 25px; margin: 15px 0 0 10px;" class="modal-title">Thêm mới hàng</h4>
+                        <button style=" margin: -35px 10px 0 0;" type="button" class="close" data-dismiss="modal" aria-label="Close"><span style="font-size:25px" aria-hidden="true">&times;</span></button>
+                    </div>
+
+
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                Mã Hàng
+                            </div>
+                            <div class="col-md-9">
+                                <input name="CodePro" type="text" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                Tên Hàng
+                            </div>
+                            <div class="col-md-9">
+                                <input style="width:400px" name="NamePro" type="text" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                Ảnh
+                            </div>
+                            <div class="col-md-9">
+
+                                <p><input type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)" style="display: none;"></p>
+                                <p><label for="file" style="cursor: pointer;">Chọn ảnh</label></p>
+                                <img id="output" style="width:200px; height:200px" />
+                                <script>
+                                    var loadFile = function (event) {
+                                        var image = document.getElementById('output');
+                                        image.src = URL.createObjectURL(event.target.files[0]);
+                                    };
+                                </script>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                Đơn Giá
+                            </div>
+                            <div class="col-md-9">
+                                <input name="Price" type="number" /> VND
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                Số Lượng
+                            </div>
+                            <div class="col-md-9">
+                                <input name="Number" type="number" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input onclick="confirmAdd()" type="button" class="btn btn-primary" value="Thêm" />.
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Hủy</button>
+                </div>
+            }
+        </div>
+    </div><!-- /.modal-content -->
+</div>
+
+<table class="table">
+    <tr class="headerrow">
+        <th>
+            Mã Hàng
+        </th>
+        <th>
+            Tên Hàng
+        </th>
+        <th></th>
+        <th>
+            Đơn Giá
+        </th>
+        <th> Số lượng </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in listProduct)
+    {
+        string modalUpdate = "modal" + item.IdPro;
+
+        <tr id="@item.IdPro" class="Search">
+            <td>
+                @item.CodePro
+            </td>
+            <td class="tdNamePro">
+                @item.NamePro
+            </td>
+            <td><img src="@item.Image" style="width:200px; height:200px" /></td>
+            <td class="tdPrice">
+                @item.Price
+            </td>
+            <td class="tdNumber">
+                @item.Amount
+            </td>
+
+            <td>
+                <button data-toggle="modal" data-target="#@modalUpdate" class="btn btn-primary"><i class="fa fa-cogs"></i>Cập nhật</button>
+                <button onclick="confirmDelete(@item.IdPro)" class="btn btn-primary"><i class="fa fa-trash"></i>Xóa</button>
+                <div id="@modalUpdate" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                            <div id="myModal">
+                                <div class="modal-header" style="height: 70px; background: #337ab7; color: white; font-weight: bold; font-size: 30px; padding: 0;">
+
+                                    <h4 style=" font-size: 25px; margin: 15px 0 0 10px;" class="modal-title">Cập nhật thông tin hàng</h4>
+                                    <button style=" margin: -35px 10px 0 0;" type="button" class="close" data-dismiss="modal" aria-label="Close"><span style="font-size:25px" aria-hidden="true">&times;</span></button>
+                                </div>
+
+
+                                <div class="modal-body">
+
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            Mã Hàng
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input class="IdPro" value="@item.IdPro" type="hidden" />
+                                            <label>@item.CodePro</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            Tên Hàng
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input style="width:100%; margin-left:80px" class="NamePro" value="@item.NamePro" type="text" />
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            Đơn Giá
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input style="margin-left:30px" class="Price" value="@item.Price" type="text" />                                                VND
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            Số Lượng
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input class="Amount" value="@item.Amount" type="text" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <input onclick="confirmUpdate(@item.IdPro)" type="button" class="btn btn-primary" value="Lưu" />.
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Hủy</button>
+                            </div>
+
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div>
+            </td>
+        </tr>
+    }
+
+</table>
+<script>
+    function Contains(text_one, text_two) {
+        if (text_one.indexOf(text_two) != -1)
+            return true;
+    }
+
+    // statis import
+
+    $("#Search").keyup(function () {
+        var searchText = $("#Search").val().toLowerCase();
+
+        $(".Search").each(function () {
+            var id = $(this).find(".tdNamePro");
+
+            if (Contains($(id).text().toLowerCase(), searchText)) {
+                $(this).show();
+            }
+            else {
+                $(this).hide();
+            }
+        })
+    })
+    function confirmAdd() {
+        let txt = "Xác nhận thêm mới hàng ?";
+        if (confirm(txt) == true) {
+            $('#addForm').submit();
+        }
+    }
+    function confirmUpdate(IdPro) {
+        let txt = "Xác nhận cập nhật hàng ?";
+        if (confirm(txt) == true) {
+            var NamePro = $('#' + IdPro + ' .NamePro').val();
+            var Price = $('#' + IdPro + ' .Price').val();
+            var Amount = $('#' + IdPro + ' .Amount').val();
+            $('#' + IdPro + ' .tdNamePro').text(NamePro);
+            $('#' + IdPro + ' .tdPrice').text(Price);
+            $('#' + IdPro + ' .tdNumber').text(Amount);
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Admin/updateProduct/",
+                    data: { IdPro: IdPro, NamePro: NamePro, Price: Price, Number: Amount },
+
+                    dataType: "json",
+                    success: function () {
+                    }
+                })
+        }
+    }
+    function confirmDelete(IdPro) {
+        let txt = "Xác nhận xóa hàng ?";
+        if (confirm(txt) == true) {
+            $('#' + IdPro).remove();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Admin/deleteProduct/",
+                    data: { IdPro: IdPro },
+
+                    dataType: "json",
+                    success: function () {
+                    }
+                })
+        }
+    }
+
+</script>

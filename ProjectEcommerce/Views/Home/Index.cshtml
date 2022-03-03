@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    var listProducts = (List<ProjectEcommerce.Models.EF.Product>)ViewBag.listProduct;
+    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+
+}
+<h2>Danh sách hàng nội thất</h2>
+<div class="row">
+    @foreach (var item in listProducts)
+    {
+        string IdProduct = "Product" + item.IdPro;
+        <div class="col-md-3">
+            
+            <center>
+                <img src="@item.Image" style="width:200px; height:200px" />
+                <h4>@item.NamePro</h4>
+                <h4 style="color:red">@item.Price.ToString("#,###", info) VND</h4>
+                <input style="padding: 6px 15px;" onclick="decrease(@item.IdPro)" type="button" value="-" />
+                <input style="width:50px; padding:7px" id="@IdProduct" type="text" value="1" />
+                <input style="padding: 6px 15px;" onclick="increase(@item.IdPro)" type="button" value="+" />
+                @if (Session["IdCus"] != null)
+                {
+                    <button onclick="addCart('@Session["IdCus"].ToString()', @item.IdPro)" class="btn btn-block" style="color: white; background: #ed3030; width: 200px; font-weight: bold"><i class="fa fa-shopping-cart">Thêm vào giỏ hàng</i></button>
+                    
+                }
+                else
+                {
+                    <a href="@Url.Action("Index", "Account", new { id=1})" class="btn btn-block" style="color: white; background: #ed3030; width: 200px; font-weight: bold"><i class="fa fa-shopping-cart">Thêm vào giỏ hàng</i></a>
+
+                }
+            </center>
+            
+        </div>
+    }
+</div>
+<div style="top: 50%; left: 50%; position: fixed; padding: 20px; display:none; border-radius: 10px; opacity: 0.8; background: #978787; color: white;" id="textAddCart">Thêm vào giỏ hàng thành công</div>
+<script>
+    
+    function addCart(IdCus, IdPro) {
+        var amount = $('#Product' + IdPro).val();
+        $('#textAddCart').show();
+        setTimeout(function () {
+            $('#textAddCart').hide();
+        }, 1500);
+         
+        $.ajax(
+            {
+                type: "POST",
+                url: "/Home/AddCart/",
+                data: { IdCus: IdCus, Amount: amount, IdPro: IdPro },
+
+                dataType: "json",
+                success: function () {
+                }
+            })
+    }
+    function increase(IdPro) {
+        var number = $('#Product' + IdPro).val();
+
+        var number1 = Number(number) + 1;
+
+        $('#Product' + IdPro).val(number1);
+
+    }
+    function decrease(IdPro) {
+        var number = $('#Product' + IdPro).val();
+
+        var number1 = Number(number) - 1;
+        if (number1 == 0) {
+            $('#Product' + IdPro).val(1);
+        }
+        else {
+            $('#Product' + IdPro).val(number1);
+        }
+    }
+</script>
+
+    

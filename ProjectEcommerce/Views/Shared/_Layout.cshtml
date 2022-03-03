@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách sản phẩm</title>
+     @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+     <link href="~/Content/font-awesome.css" rel="stylesheet" />
+
+</head>
+<body>
+    
+    <div class="row" style="background: black; margin-top:-60px">
+        <div class="col-md-2" style="margin-left:50px">
+            <img src="~/images/logoPage.jpg" style="width:200px"/>
+        </div>
+
+        <div class="col-md-6" style="width:700px; margin-left:10px">
+            <h1 style="color: #bf8c1b; text-shadow: 2px 2px; padding-left:70px">ĐỒ NỘI THẤT UNIQUE DECOR</h1>
+            <h3 style="color: #c79563; font-family: cursive; font-size: 28px; padding-left:40px">Tô điểm thế giới bên trong ngôi nhà của bạn</h3>
+            @using (Html.BeginForm("SearchProduct", "Home"))
+            {
+                <input class="form-control" placeholder="Tìm kiếm sản phẩm" name="nameProduct" type="text" style="float:left; padding: 10px; max-width:520px; width: 520px; height: 45px;" />
+                <button style="float: left; margin-left:10px; background: #f57223; color:white; width: 50px; height:45px; font-size:22px" type="submit" class="btn btn-group"><i class="fa fa-search"></i></button>
+            }
+            @if (Session["IdCus"] != null)
+            {
+                <a href="@Url.Action("Index", "Cart")"> <i class="fa fa-shopping-cart" style=" float: left; font-size: 57px; color: #b1884b; margin:-10px 0 0 20px;"></i></a>
+
+            }
+            else
+            {
+                <a href="@Url.Action("Index", "Account", new { id=1})"> <i class="fa fa-shopping-cart" style=" float: left; font-size: 57px; color: #b1884b; margin:-10px 0 0 20px;"></i></a>
+
+            }
+
+        </div>
+
+        <div class="col-md-3" style="font-size:20px; margin-left:-15px">
+                
+                    <div style="height:120px">
+                        <div><h3 style="color: white; font-weight: bold; font-size: 24px;">Hỗ trợ khách hàng</h3> </div>
+                        <img src="~/images/hotline.gif" style="width:270px; height:100px">
+
+                    </div>
+                    <div style="color:orangered; margin-top:6px">
+                        @if (Session["IdCus"] == null)
+                        {
+                            <a style="padding-right: 20px; margin-left:70px; color: white" href="@Url.Action("Index","Account", new { id=1})">Đăng nhập</a>
+                            
+                        }
+                        else
+                        {
+                            <div style="margin-left:70px">
+                                 
+                                <div style="z-index:1000" id="account">
+                     
+                                    <a style="text-decoration:none; color:white" href="@Url.Action("Index", "Account", new { id=1})"><i style="margin-right:10px" class="fa fa-external-link-alt"></i>Đăng xuất</a>
+                                </div>
+                            </div>
+                         }
+                    </div>
+                 
+            </div>
+
+
+    </div>
+
+   
+   
+    <div style="margin:0 100px 0 70px">
+        @RenderBody()
+        <hr />
+
+    </div>
+    <footer style=" background: #42403b; text-align: center; padding: 20px; margin-top: -40px; color: white; font-size: 16px;">
+        <div>
+            Địa chỉ: 73 Trần Đại Nghĩa, Phường Hòa Hải, Quận Ngũ Hàng Sơn, Thành phố Đà Nẵng, Việt Nam. Email: trunglethanh6@gmail.com
+        </div>
+        <div>
+            Chịu Trách Nhiệm Quản Lý Nội Dung: Lê Thanh Trung -  Điện thoại liên hệ: 0945421537
+        </div>
+        <div>
+            Mã số doanh nghiệp: 0106773786 do Sở Kế hoạch &amp; Đầu tư TP Đà Nẵng cấp lần đầu ngày 10/02/2022
+        </div>
+        <div>© 2015 - Bản quyền thuộc về Công ty TNHH Decor</div>
+    </footer>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
